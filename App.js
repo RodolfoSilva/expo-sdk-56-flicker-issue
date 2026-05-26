@@ -1,40 +1,21 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { Host, TextInput, useNativeState } from "@expo/ui";
-import { useEffectEvent } from "react";
-
-function formatPhone(input) {
-  "worklet";
-  const digits = input.replace(/\D/g, "").slice(0, 10);
-  if (digits.length <= 3) return digits;
-  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
-  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
-}
+import { useRef } from "react";
 
 export default function App() {
-  const phone = useNativeState("");
-  const selection = useNativeState({ start: 0, end: 0 });
-
-  const handleChangeText = useEffectEvent((value) => {
-    "worklet";
-    const formatted = formatPhone(value);
-    if (formatted !== value) {
-      phone.value = formatted;
-      // Snaps to end for demo. Real masks need smarter cursor handling.
-      selection.value = { start: formatted.length, end: formatted.length };
-    }
-  });
+  const inputRef = useRef(null);
 
   return (
     <View style={styles.container}>
       <Host matchContents={{ vertical: true }} style={{ width: 300 }}>
         <TextInput
-          value={phone}
-          selection={selection}
-          keyboardType="phone-pad"
-          placeholder="(555) 123-4567"
+          ref={inputRef}
+          defaultValue="Hello Expo Team"
+          placeholder="Type here"
           textAlign="center"
-          onChangeText={handleChangeText}
+          onChangeText={(value) => console.log(value)}
+          style={styles.input}
         />
       </Host>
     </View>
@@ -46,5 +27,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     justifyContent: "center",
+    alignItems: "center",
+  },
+  input: {
+    backgroundColor: "#99FF99",
+    borderWidth: 0,
+    textAlign: "center",
   },
 });
